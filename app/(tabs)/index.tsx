@@ -1,75 +1,114 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const HomeScreen = () => {
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
 
-export default function HomeScreen() {
+  const todayDate = new Date().toLocaleDateString();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={[styles.container, { paddingTop: insets.top + 20 }]}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Today</Text>
+        <TouchableOpacity onPress={() => router.push("/settings")}>
+          <Ionicons name="settings-outline" size={24} color="#000" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Subheading */}
+      <Text style={styles.subheading}>Best platform to create to-do list</Text>
+
+      {/* Card */}
+      <View style={styles.card}>
+        <View style={styles.cardHeader} />
+        <View style={styles.cardContent}>
+          <TouchableOpacity style={styles.plusButton}>
+            <Ionicons name="add" size={24} color="#fff" />
+          </TouchableOpacity>
+          <Text style={styles.cardText}>
+            Tap plus to create a new task
+          </Text>
+        </View>
+        {/* Task row */}
+        <View style={styles.taskRow}>
+          <Text style={styles.taskText}>Add your task text</Text>
+          <Text style={styles.taskDate}>{todayDate}</Text>
+        </View>
+      </View>
+    </View>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  headerText: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  subheading: {
+    color: "#767E8C",
+    marginVertical: 10,
+    fontSize: 16,
+  },
+  card: {
+    backgroundColor: "#F5F5F5",
+    borderRadius: 10,
+    marginTop: 20,
+    padding: 16,
+  },
+  cardHeader: {
+    backgroundColor: "#24A19C",
+    height: 40,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    marginHorizontal: -16,
+    marginTop: -16,
+  },
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  plusButton: {
+    backgroundColor: "#24A19C",
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  cardText: {
+    color: "#333333",
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "System", 
+  },
+  taskRow: {
+    marginTop: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  taskText: {
+    color: "#767E8C",
+  },
+  taskDate: {
+    color: "#767E8C",
   },
 });

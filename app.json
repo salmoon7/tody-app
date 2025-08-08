@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "tody-mobile",
-    "slug": "tody-mobile",
+    "name": "TodyApp",
+    "slug": "TodyApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "todymobile",
+    "scheme": "todyapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+      "backgroundColor": "#0D6EFD" 
       },
       "edgeToEdgeEnabled": true
     },
@@ -31,7 +31,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+      "backgroundColor": "#0D6EFD" 
         }
       ]
     ],
