@@ -28,14 +28,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: '',
           tabBarIcon: ({ color }) => <Ionicons name="home" size={28} color={color} />,
         }}
       />
       <Tabs.Screen
         name="upcoming"
         options={{
-          title: 'Upcoming',
+          title: '',
           tabBarIcon: ({ color }) => <Ionicons name="calendar" size={28} color={color} />,
         }}
       />

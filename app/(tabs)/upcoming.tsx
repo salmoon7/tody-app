@@ -1,4 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { router, Stack } from 'expo-router';
@@ -7,11 +8,13 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -34,6 +37,7 @@ export default function Upcoming() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD'));
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const insets = useSafeAreaInsets();
 
@@ -82,7 +86,12 @@ export default function Upcoming() {
         </TouchableOpacity>
       </View>
       <View style={styles.infoRow}>
+        <View>
+
         <Text style={styles.timeText}>{item.time}</Text>
+        </View>
+        <View style={styles.iconCountainer}> 
+
         <View style={styles.iconWithCount}>
           <Ionicons name="chatbubble-outline" size={18} color={SECONDARY_COLOR} />
           <Text style={styles.iconCount}>1</Text>
@@ -90,6 +99,7 @@ export default function Upcoming() {
         <View style={styles.iconWithCount}>
           <MaterialCommunityIcons name="inbox-outline" size={18} color={SECONDARY_COLOR} />
           <Text style={styles.iconCount}>2</Text>
+        </View>
         </View>
       </View>
       <View style={styles.dateRow}>
@@ -99,36 +109,16 @@ export default function Upcoming() {
     </View>
   );
 
-   const renderCalendarRow = (days: string[]) => (
-    <View style={styles.calendarRow}>
-      {days.map((day) => {
-        const isSelected = day === selectedDate;
-        return (
-          <TouchableOpacity
-            key={day}
-            style={[
-              styles.dayContainer,
-              isSelected && {
-                backgroundColor: PRIMARY_COLOR,
-                borderRadius: 8,
-              },
-            ]}
-            onPress={() => setSelectedDate(day)}
-          >
-            <Text style={[styles.dayName, isSelected && { color: '#fff' }]}>
-              {dayjs(day).format('ddd')}
-            </Text>
-            <Text style={[styles.dayNumber, isSelected && { color: '#fff' }]}>
-              {dayjs(day).format('D')}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-      <TouchableOpacity onPress={() => setSelectedDate(dayjs().format('YYYY-MM-DD'))} style={styles.todayButton}>
-        <Text style={{ color: 'white' }}>Today</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  // Date picker change handler
+  const onChangeDate = (event: any, date?: Date) => {
+    setShowDatePicker(Platform.OS === 'ios'); // keep open on iOS
+    if (date) {
+      setSelectedDate(dayjs(date).format('YYYY-MM-DD'));
+    }
+  };
+
+  // Convert selectedDate string to Date object for DatePicker value
+  const selectedDateObj = dayjs(selectedDate).toDate();
 
   return (
     <>
@@ -154,17 +144,68 @@ export default function Upcoming() {
       />
 
       <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
-        {/* Dropdown to "change calendar" */}
-        <TouchableOpacity style={styles.calendarDropdown} activeOpacity={0.7} onPress={() => alert('Change calendar pressed')}>
- <Text style={styles.currentDayText}>{dayjs(selectedDate).format('dddd')}</Text>          <Ionicons name="chevron-down" size={20} color={PRIMARY_COLOR} />
 
-   <TouchableOpacity onPress={() => setSelectedDate(dayjs().format('YYYY-MM-DD'))} style={styles.todayButton}>
-        <Text style={{ color: 'white' }}>Today</Text>
-      </TouchableOpacity>
-        </TouchableOpacity>
+        {/* Calendar header row */}
+        <View style={styles.calendarHeaderRow}>
+          <TouchableOpacity
+            style={styles.calendarDropdown}
+            activeOpacity={0.7}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text style={styles.currentDayText}>{dayjs(selectedDate).format('dddd')}</Text>
+            <Ionicons name="chevron-down" size={20} color={PRIMARY_COLOR} />
+          </TouchableOpacity>
 
-        {/* Calendar days */}
-        {renderCalendarRow(weekDays.slice(0, 7))}
+          <TouchableOpacity
+            onPress={() => setSelectedDate(dayjs().format('YYYY-MM-DD'))}
+            style={styles.todayButton}
+          >
+            <Text style={{ color: 'white' }}>Today</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Date picker modal */}
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDateObj}
+            mode="date"
+            display="default"
+            onChange={onChangeDate}
+            maximumDate={new Date(2100, 12, 31)}
+            minimumDate={new Date(2000, 1, 1)}
+          />
+        )}
+
+        {/* Calendar days row */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 8, marginBottom: 8 }}
+        >
+          {weekDays.slice(0, 7).map((day) => {
+            const isSelected = day === selectedDate;
+            return (
+              <TouchableOpacity
+                key={day}
+                style={[
+                  styles.dayContainer,
+                  isSelected && {
+                    backgroundColor: PRIMARY_COLOR,
+                    borderRadius: 8,
+                  },
+                ]}
+                onPress={() => setSelectedDate(day)}
+              >
+                <Text style={[styles.dayName, isSelected && { color: '#fff' }]}>
+                  {dayjs(day).format('ddd')}
+                </Text>
+                <Text style={[styles.dayNumber, isSelected && { color: '#fff' }]}>
+                  {dayjs(day).format('D')}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
 
         {/* Day and Reschedule row */}
         <View style={styles.dayRescheduleRow}>
@@ -189,7 +230,13 @@ export default function Upcoming() {
                 <ActivityIndicator color={PRIMARY_COLOR} size="small" />
                 <Text style={{ color: SECONDARY_COLOR, marginTop: 6 }}>Loading tasks...</Text>
               </View>
-            ) : null
+            ) : 
+
+ (
+    <View style={styles.noTodoContainer}>
+      <Text style={styles.noTodoText}>No todos for today</Text>
+    </View>
+  )
           }
         />
       </View>
@@ -204,56 +251,55 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  calendarHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+    paddingHorizontal: 16,
+  },
+
   calendarDropdown: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: PRIMARY_COLOR,
     borderRadius: 20,
-    alignSelf: 'flex-start',
   },
 
-  calendarDropdownText: {
-    color: PRIMARY_COLOR,
-    fontWeight: '600',
+  currentDayText: {
     fontSize: 16,
-    marginRight: 6,
+    fontWeight: '500',
+    color: '#000',
   },
 
-  calendarRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-    paddingHorizontal: 8,
-    flexWrap: 'nowrap',
-    justifyContent: 'space-between',
-  },
-
-  dayContainer: {
-    width: 50,
-    alignItems: 'center',
-    paddingVertical: 8,
-    marginHorizontal: 4,
-  },
-  dayName: {
-    color: SECONDARY_COLOR,
-    fontSize: 12,
-  },
-  dayNumber: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
   todayButton: {
     backgroundColor: PRIMARY_COLOR,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
-    marginLeft: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  dayContainer: {
+    width: 50,
+    alignItems: 'center',
+    paddingVertical: 15,
+    marginHorizontal: 4,
+  },
+
+  dayName: {
+    color: SECONDARY_COLOR,
+    fontSize: 12,
+  },
+
+  dayNumber: {
+    fontSize: 18,
+    fontWeight: '600',
+    
   },
 
   dayRescheduleRow: {
@@ -263,11 +309,17 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     alignItems: 'center',
   },
-  currentDayText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: "000",
-  },
+  noTodoContainer: {
+  paddingVertical: 20,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+noTodoText: {
+  fontSize: 16,
+  color: '#888',
+  fontStyle: 'italic',
+},
+
   rescheduleText: {
     fontSize: 16,
     color: PRIMARY_COLOR,
@@ -312,23 +364,32 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
+justifyContent:"space-between",
     marginBottom: 6,
     gap: 20,
   },
-  timeText: {
+iconCountainer:{
+flexDirection: 'row',
+    alignItems: 'center',
+    gap:8
+}
+,  timeText: {
     color: RED_COLOR,
     fontWeight: '600',
     fontSize: 14,
   },
+
   iconWithCount: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
+
   iconCount: {
     color: SECONDARY_COLOR,
     fontSize: 14,
   },
+
   dateRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -336,11 +397,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: 8,
   },
+
   dateText: {
     color: SECONDARY_COLOR,
     fontWeight: '500',
     fontSize: 14,
   },
+
   center: {
     paddingVertical: 20,
     alignItems: 'center',
