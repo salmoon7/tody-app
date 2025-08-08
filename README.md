@@ -1,54 +1,189 @@
-<<<<<<< HEAD
-# tody-app
-=======
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 📝 Tody Mobile – React Native Todo App
 
-## Get started
+A mobile Todo List application built as part of the **React Native Developer Test** for **P2vest Technology Ltd**.  
+The app implements **authentication**, **upcoming tasks listing**, and **settings management** based on the provided Figma design, using a combination of modern React Native tools and clean architecture.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 📦 Tech Stack
 
-2. Start the app
+- **React Native 0.79.5** (via Expo SDK 53)
+- **Expo Router** for file-based navigation
+- **TypeScript** for type safety
+- **Axios** for API calls
+- **Zustand** for lightweight state management
+- **React Navigation** for navigation patterns
+- **Day.js** for date handling
+- **React Native Paper** for UI components
+- **@expo/vector-icons** for scalable icons (instead of static image icons — reduces app size and improves performance)
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🚀 Setup Instructions
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 1. Clone the repository
+```bash
+git clone https://github.com/<your-username>/tody-mobile.git
+cd tody-mobile
+````
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 2. Install dependencies
 
 ```bash
-npm run reset-project
+npm install
+# or
+yarn install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 3. Start the development server
 
-## Learn more
+```bash
+npm start
+# or
+yarn start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 4. Run on a device or emulator
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm run android   # for Android
+npm run ios       # for iOS (Mac required)
+```
 
-## Join the community
+> **Note:** Requires Node.js ≥ 18 and Expo Go app installed on your device for development preview.
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
->>>>>>> 06f63f1 (Initial commit)
+## 🎯 Features Implemented
+
+### 1. **Authentication (Register / Sign In)**
+
+* Integrated with [DummyJSON Auth API](https://dummyjson.com/docs/auth) `/auth/login`
+* Simulated login flow using **Axios**
+* Displays error messages for invalid credentials
+* Uses **Zustand** to store authentication state globally
+
+### 2. **Home Dashboard**
+
+* Clean and responsive layout based on Figma design
+* Shows a welcoming dashboard for logged-in users
+
+### 3. **Upcoming Tasks**
+
+* Integrated with [DummyJSON Todos API](https://dummyjson.com/docs/todos)
+* Lists upcoming tasks for the authenticated user
+* Mark tasks as completed
+* Displays **"No todos for today"** message if there are no scheduled tasks
+* Uses **Day.js** to filter and display tasks for the selected day
+
+### 4. **Settings Screen**
+
+* Displays authenticated user’s profile (fetched from DummyJSON Users API)
+* Static options for additional settings per Figma design
+
+### 5. **UI Enhancements**
+
+* Replaced static image icons from Figma with **vector icons** for:
+
+  * Better scalability
+  * Smaller app size
+  * Consistent styling across screen densities
+
+---
+
+## 🎨 Design Choices & Assumptions
+
+1. **Vector Icons over PNG Assets**
+
+   * Chose `@expo/vector-icons` instead of static images from the Figma design to optimize memory usage and reduce final APK size.
+
+2. **Zustand for State Management**
+
+   * Selected over Redux for its simplicity and minimal boilerplate, ensuring a clean codebase for a small-to-medium scale app.
+
+3. **API Integration**
+
+   * Used Axios for HTTP requests with interceptors for potential future enhancements like token refresh.
+
+4. **Figma Layout Matching**
+
+   * Replicated the Figma layout as closely as possible while making minor adjustments for mobile responsiveness.
+
+5. **No Todos Message**
+
+   * Implemented a user-friendly fallback message when a selected day has no tasks.
+
+---
+
+## 📸 Screenshots
+
+> *Screenshots from the implemented app running on Android*
+
+| Login Screen                    | Home Dashboard                | Upcoming Tasks                        | No Todos Message                      | Settings Screen                       |
+| ------------------------------- | ----------------------------- | ------------------------------------- | ------------------------------------- | ------------------------------------- |
+| ![Login](screenshots/login.png) | ![Home](screenshots/home.png) | ![Upcoming](screenshots/upcoming.png) | ![No Todos](screenshots/no-todos.png) | ![Settings](screenshots/settings.png) |
+
+---
+
+## ⚠️ Challenges Faced
+
+1. **Figma → React Native Conversion**
+
+   * Translating exact pixel-perfect designs into React Native while keeping layouts responsive across multiple devices required fine-tuning styles.
+
+2. **API Data Shape**
+
+   * The DummyJSON API does not perfectly match the Figma’s UI data requirements, so I transformed and filtered the API responses to match the design expectations.
+
+3. **Date Filtering**
+
+   * Handling date-specific todos required consistent parsing with Day.js and time zone considerations.
+
+4. **Optimizing for APK Size**
+
+   * Replacing images with vector icons and minimizing dependencies helped reduce bundle size for faster installation.
+
+---
+
+## 📂 Project Structure
+
+```
+tody-mobile/
+├── app/                  # App screens (Expo Router)
+│   ├── (tabs)/           # Tab navigation screens
+│   ├── _layout.tsx       # Navigation layout
+├── assets/               # Fonts & images (only essential)
+├── components/           # Reusable UI components
+├── hooks/                # Custom hooks
+├── store/                # Zustand state store
+├── constants/            # Theme colors & constants
+├── scripts/              # Helper scripts (e.g., reset project)
+└── package.json
+```
+
+---
+
+## 📦 Build & APK
+
+To generate an APK for submission:
+
+```bash
+npm install -g eas-cli
+eas login
+eas build -p android --profile preview
+```
+
+The resulting `.apk` can be downloaded from the EAS build dashboard.
+
+---
+
+## 👨‍💻 Author
+
+**Taofeek AbdulSalam Adebayo**
+React Native Developer Candidate – P2vest Technology Ltd
+[GitHub](https://github.com/salmoon7) 
+
+---
+
+
