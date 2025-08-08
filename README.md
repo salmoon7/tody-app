@@ -122,7 +122,11 @@ npm run ios       # for iOS (Mac required)
 
 | Login Screen                    | Home Dashboard                | Upcoming Tasks                        | No Todos Message                      | Settings Screen                       |
 | ------------------------------- | ----------------------------- | ------------------------------------- | ------------------------------------- | ------------------------------------- |
-| ![Login](screenshots/login.png) | ![Home](screenshots/home.png) | ![Upcoming](screenshots/upcoming.png) | ![No Todos](screenshots/no-todos.png) | ![Settings](screenshots/settings.png) |
+| ![Log<img width="720" height="1600" alt="login-screen" src="https://github.com/user-attachments/assets/fdc49d21-ff35-4383-b099-5df9957d44c5" />
+in]| ![Hom<img width="720" height="1600" alt="home-screen" src="https://github.com/user-attachments/assets/24342933-f58f-466e-a135-bf5cf5a5fb9b" />
+e| ![Upcomi<img width="720" height="1600" alt="upcoming" src="https://github.com/user-attachments/assets/9257d239-e587-4cd2-95eb-b59027c02987" />
+ng]  | ![Settings<img width="720" height="1600" alt="settings" src="https://github.com/user-attachments/assets/f7202f25-a712-4a0f-aca2-f37a63410776" />
+]  |
 
 ---
 
